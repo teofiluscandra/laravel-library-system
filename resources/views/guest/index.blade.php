@@ -5,7 +5,7 @@
   <header class="header-banner">
   <div class="container-width">
     <div class="logo-container">
-        <img src="/images/logo-pemda-prov-bali.jpg" width="100">
+        <img src="{{ url('/images/logo-pemda-prov-bali.jpg') }}" width="100">
     </div>
     <div class="clearfix">
     </div>
