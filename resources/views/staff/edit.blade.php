@@ -16,7 +16,7 @@
 
           <div class="panel-body">
             {!! Form::model($staff, ['url' => route('staff.update', $staff->id),
-              'method'=>'put', 'class'=>'form-horizontal']) !!}
+              'method'=>'put','files' => true, 'class'=>'form-horizontal']) !!}
             @include('staff._form')
             {!! Form::close() !!}
           </div>

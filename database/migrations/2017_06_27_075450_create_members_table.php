@@ -22,6 +22,7 @@ class CreateMembersTable extends Migration
             $table->string('no_identitas');
             $table->text('alamat');
             $table->string('jenis_kelamin');
+            $table->string('foto')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')

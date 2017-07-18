@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 
 class Book extends Model
 {
-    protected $fillable = ['kode_buku','title', 'author_id', 'amount'];
+    protected $fillable = ['kode_buku','title', 'author_id', 'amount','tahun_terbit','penerbit','deskripsi'];
 
     public static function boot()
     {
@@ -35,10 +35,8 @@ class Book extends Model
         return $this->hasMany('App\BorrowLog');
     }
 
-    
-
     public function getBorrowedAttribute()
     {
-        return $this->borrowLogs()->borrowed()->count();
+        return $this->amount ;
     }
 }

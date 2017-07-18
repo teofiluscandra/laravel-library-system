@@ -29,10 +29,31 @@
   <div class="col-md-4">
     {!! Form::number('amount', null, ['class'=>'form-control', 'min'=>1]) !!}
     {!! $errors->first('amount', '<p class="help-block">:message</p>') !!}
-    @if (isset($book))
-        <p class="help-block">{{ $book->borrowed }} buku sedang dipinjam</p>
-    @endif
   </div>
+</div>
+
+<div class="form-group{{ $errors->has('tahun_terbit') ? ' has-error' : '' }}">
+  {!! Form::label('tahun_terbit', 'Tahun Terbit', ['class'=>'col-md-2 control-label']) !!}
+  <div class="col-md-4">
+    {!! Form::number('tahun_terbit', null, ['class'=>'form-control', 'min'=>1]) !!}
+    {!! $errors->first('tahun_terbit', '<p class="help-block">:message</p>') !!}
+  </div>
+</div>
+
+<div class="form-group{{ $errors->has('penerbit') ? ' has-error' : '' }}">
+  {!! Form::label('penerbit', 'Penerbit', ['class'=>'col-md-2 control-label']) !!}
+  <div class="col-md-4">
+    {!! Form::text('penerbit', null, ['class'=>'form-control']) !!}
+    {!! $errors->first('penerbit', '<p class="help-block">:message</p>') !!}
+  </div>
+</div>
+
+<div class="form-group{{ $errors->has('deskripsi') ? ' has-error' : '' }}">
+    {!! Form::label('deskripsi', 'Deskripsi', ['class'=>'col-md-2 control-label']) !!}
+    <div class="col-md-4">
+        {!! Form::textarea('deskripsi', isset($book) ? $book->deskripsi : null, ['class'=>'form-control']) !!}
+        {!! $errors->first('deskripsi', '<p class="help-block">:message</p>') !!}
+    </div>
 </div>
 
 <div class="form-group{{ $errors->has('cover') ? ' has-error' : '' }}">

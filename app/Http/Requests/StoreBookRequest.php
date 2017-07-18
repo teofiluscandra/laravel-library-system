@@ -25,9 +25,11 @@ class StoreBookRequest extends FormRequest
     public function rules()
     {
         return [
+            'kode_buku' => 'required|unique:books,kode_buku',
             'title'     => 'required|unique:books,title',
             'author_id' => 'required|exists:authors,id',
-            'amount'    => 'numeric',
+            'tahun_terbit'    => 'required|numeric',
+            'amount'    => 'required|numeric',
             'cover'     => 'image|max:2048'
         ];
     }

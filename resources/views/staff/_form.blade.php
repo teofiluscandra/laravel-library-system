@@ -14,6 +14,19 @@
   </div>
 </div>
 
+<div class="form-group{{ $errors->has('foto') ? ' has-error' : '' }}">
+  {!! Form::label('foto', 'Foto', ['class'=>'col-md-2 control-label']) !!}
+  <div class="col-md-4">
+    {!! Form::file('foto') !!}
+    @if (isset($staff) && $staff->staff->foto)
+      <p>
+      {!! Html::image(asset('img/'.$staff->staff->foto), null, ['class'=>'img-rounded img-responsive']) !!}
+      </p>
+    @endif
+    {!! $errors->first('foto', '<p class="help-block">:message</p>') !!}
+  </div>
+</div>
+
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
   {!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
   <div class="col-md-4">

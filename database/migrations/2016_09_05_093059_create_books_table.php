@@ -22,7 +22,7 @@ class CreateBooksTable extends Migration
             $table->text('deskripsi')->nullable();
             $table->integer('author_id')->unsigned();
             $table->integer('amount')->unsigned();
-            $table->integer('stock')->unsigned();
+            $table->integer('stock')->nullable();
             $table->string('cover')->nullable();
             $table->timestamps();
 

@@ -43,6 +43,8 @@ class BookListController extends Controller
             ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
 
         return view('books.list')->with(compact('html'));
+
+        
     }
 
 

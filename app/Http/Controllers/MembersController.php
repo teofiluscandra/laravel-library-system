@@ -11,6 +11,7 @@ use App\Member;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Facades\Datatables;
 use App\Http\Requests\StoreMemberRequest;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\UpdateMemberRequest;
@@ -87,12 +88,23 @@ class MembersController extends Controller
         $data_user['kode_member'] = 'KD-'.$member->id;
         $data_user['user_id'] = $member->id;
         $member_data = Member::create($data_user);
+
+        if ($request->hasFile('foto')) {
+            $uploaded_photo = $request->file('foto');
+            $extension = $uploaded_photo->getClientOriginalExtension();
+            $filename = md5(time()) . '.' . $extension;
+            $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'img';
+            $uploaded_photo->move($destinationPath, $filename);
+            $member_data->foto = $filename;
+            $member_data->save();
+        }
+
         // set role
         $memberRole = Role::where('name', 'member')->first();
         $member->attachRole($memberRole);
 
         // kirim email
-        Mail::send('auth.emails.invite', compact('member', 'password'), function ($m) use ($member) {
+        Mail::send('auth.emails.invite', with(['data'=>$member, 'password'=>$password]), function ($m) use ($member) {
             $m->to($member->email, $member->name)->subject('Anda telah didaftarkan di Dinas Kearsipan dan Perpustakaan Provinsi Bali!');
         });
 
@@ -146,6 +158,27 @@ class MembersController extends Controller
         $member_data = Member::where('user_id',$id)->first();
         $member_data->update($request->only('tempat_lahir','tanggal_lahir','no_identitas','jenis_kelamin','alamat'));
 
+        if ($request->hasFile('foto')) {
+            $filename = null;
+            $uploaded_foto = $request->file('foto');
+            $extension = $uploaded_foto->getClientOriginalExtension();
+            $filename = md5(time()) . '.' . $extension;
+            $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'img';
+            $uploaded_foto->move($destinationPath, $filename);
+            if ($member_data->foto) {
+                $old_foto = $member_data->foto;
+                $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
+                    . DIRECTORY_SEPARATOR . $member_data->foto;
+
+                try {
+                    File::delete($filepath);
+                } catch (FileNotFoundException $e) {
+                }
+            }
+            $member_data->foto = $filename;
+            $member_data->save();
+        }
+
         Session::flash("flash_notification", [
             "level"=>"success",
             "message"=>"Berhasil menyimpan $member->name"
@@ -166,7 +199,21 @@ class MembersController extends Controller
         
         if($member){
             if ($member->hasRole('member')) {
-                $member->delete();
+                $foto = $member->members->foto;
+                if(!$member->delete()) return redirect()->back();
+
+                if ($request->ajax()) return response()->json(['id' => $id]);
+
+                if ($foto) {
+                    $old_foto = $member->members->foto;
+                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
+                        . DIRECTORY_SEPARATOR . $member->members->foto;
+
+                    try {
+                        File::delete($filepath);
+                    } catch (FileNotFoundException $e) {
+                    }
+                }
                 // $member_data = Member::where('user_id',$id)->first();
                 // $member_data->delete();
                 Session::flash("flash_notification", [

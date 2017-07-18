@@ -20,6 +20,7 @@ class CreateStaffTable extends Migration
             $table->string('telp');
             $table->text('alamat');
             $table->string('jenis_kelamin');
+            $table->string('foto')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')

@@ -6,7 +6,7 @@
       <div class="col-md-12">
         <ul class="breadcrumb">
           <li><a href="{{ url('/home') }}">Dashboard</a></li>
-          <li><a href="{{ url('/books-list') }}">Daftar Buku</a></li>
+          <li><a href="{{ url('/data/books') }}">Daftar Buku</a></li>
           <li class="active">Detail Buku</li>
         </ul>
         <div class="panel panel-default">
@@ -19,7 +19,9 @@
               <tbody>
               <tr>
                   <td class="text-muted">Cover</td>
-                  <td><img src="/img/{{ $book->cover }}"></td>
+                  @if($book->cover)
+                  <td><img src="/img/{{ $book->cover }}" class="img-responsive img-rounded" width="300"></td>
+                  @endif
                 </tr>
               <tr>
                   <td class="text-muted">Kode Buku</td>
@@ -40,6 +42,10 @@
                 <tr>
                   <td class="text-muted">Penerbit</td>
                   <td>{{ $book->penerbit }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Deskripsi</td>
+                  <td>{{ $book->deskripsi }}</td>
                 </tr>
                 <tr>
                   <td class="text-muted">Stok Buku</td>

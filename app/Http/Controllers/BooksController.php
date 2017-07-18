@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\UploadedFile;
 use App\Http\Requests;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
@@ -33,6 +33,9 @@ class BooksController extends Controller
         if ($request->ajax()) {
             $books = Book::with('author');
             return Datatables::of($books)
+                ->addColumn('title', function($book){
+                    return '<a href="'.route('books.show', $book->id).'">'.$book->title.'</a>';
+                })
                 ->addColumn('action', function($book){
                     return view('datatable._action', [
                         'model'           => $book,
@@ -70,8 +73,10 @@ class BooksController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
+        
         $book = Book::create($request->except('cover'));
-
+        $book->stock = $book->amount;
+        $book->save();
         // isi field cover jika ada cover yang diupload
         if ($request->hasFile('cover')) {
             // Mengambil file yang diupload
@@ -134,8 +139,8 @@ class BooksController extends Controller
     public function update(UpdateBookRequest $request, $id)
     {
         $book = Book::find($id);
-        if(!$book->update($request->all())) return redirect()->back();
-
+        if(!$book->update($request->all()) && !$request->hasFile('cover')) return redirect()->route('books.index');
+        
         if ($request->hasFile('cover')) {
             // menambil cover yang diupload berikut ekstensinya
             $filename = null;

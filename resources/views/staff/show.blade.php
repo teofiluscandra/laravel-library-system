@@ -15,6 +15,9 @@
           </div>
 
           <div class="panel-body">
+            @if ($user->staff->foto)
+            <center><img src="{{url('img/'.$user->staff->foto)}}" class="img-responsive img-rounded" width="400" alt=""></center>
+            @endif
             <table class="table">
               <tbody>
               <tr>
