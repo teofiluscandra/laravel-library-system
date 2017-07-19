@@ -30,6 +30,7 @@ class StoreBookRequest extends FormRequest
             'author_id' => 'required|exists:authors,id',
             'tahun_terbit'    => 'required|numeric',
             'amount'    => 'required|numeric',
+            'penerbit' => 'required',
             'cover'     => 'image|max:2048'
         ];
     }
