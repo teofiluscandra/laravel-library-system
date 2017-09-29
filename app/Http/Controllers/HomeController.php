@@ -7,7 +7,8 @@ use Laratrust\LaratrustFacade as Laratrust;
 use Illuminate\Support\Facades\Auth;
 use App\Author;
 use App\Member;
-
+use App\Borrowlog;
+use DB;
 class HomeController extends Controller
 {
     /**
@@ -27,7 +28,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (Laratrust::hasRole('kepala')) return $this->adminDashboard();
         if (Laratrust::hasRole('admin')) return $this->adminDashboard();
+        if (Laratrust::hasRole('staff')) return $this->adminDashboard();
         if (Laratrust::hasRole('member')) return $this->memberDashboard();
 
         return view('home');
@@ -35,11 +38,13 @@ class HomeController extends Controller
 
     protected function adminDashboard()
     {
-        $members = [];
+        $members = ['Januari','Februari', 'Maret', 'April', 'Mei','Juni','Juli','Agustus','September','November','Desember'];
         $borrows = [];
-        foreach (Member::all() as $member) {
-            array_push($members, $member->user->name);
-            array_push($borrows, $member->user->borrowLogs->count());
+        $i = 1;
+        
+        foreach ($members as $member) {
+            array_push($borrows, BorrowLog::where( DB::raw('MONTH(created_at)'), '=', $i )->count());
+            $i++;
         }
 
         return view('dashboard.admin', compact('members', 'borrows'));

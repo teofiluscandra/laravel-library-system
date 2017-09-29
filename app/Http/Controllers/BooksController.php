@@ -36,19 +36,25 @@ class BooksController extends Controller
                 ->addColumn('title', function($book){
                     return '<a href="'.route('books.show', $book->id).'">'.$book->title.'</a>';
                 })
+                ->addColumn('kategori', function($book){
+                    return $book->category->nama;
+                })
                 ->addColumn('action', function($book){
                     return view('datatable._action', [
                         'model'           => $book,
                         'form_url'        => route('books.destroy', $book->id),
                         'edit_url'        => route('books.edit', $book->id),
-                        'confirm_message' => 'Yakin mau menghapus ' . $book->title . '?'
+                        'confirm_message' => 'Yakin akan menghapus ' . $book->title . '?'
                     ]);
                 })->make(true);
         }
 
         $html = $htmlBuilder
+            ->addColumn(['data' => 'kode_buku', 'name'=>'kode_buku', 'title'=>'Kode Buku'])
             ->addColumn(['data' => 'title', 'name'=>'title', 'title'=>'Judul'])
+            ->addColumn(['data' => 'kategori', 'name'=>'kategori', 'title'=>'Kategori Buku'])  
             ->addColumn(['data' => 'amount', 'name'=>'amount', 'title'=>'Jumlah'])
+            ->addColumn(['data' => 'stock', 'name'=>'stock', 'title'=>'Stock'])
             ->addColumn(['data' => 'author.name', 'name'=>'author.name', 'title'=>'Penulis'])
             ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
 
@@ -62,6 +68,7 @@ class BooksController extends Controller
      */
     public function create()
     {
+        
         return view('books.create');
     }
 
@@ -76,6 +83,7 @@ class BooksController extends Controller
         
         $book = Book::create($request->except('cover'));
         $book->stock = $book->amount;
+        $book->kode_buku = $book->category->initial . '-' . $book->id;
         $book->save();
         // isi field cover jika ada cover yang diupload
         if ($request->hasFile('cover')) {
@@ -265,7 +273,7 @@ class BooksController extends Controller
         return view('books.export');
     }
 
-    public function exportPost(Request $request) 
+    public function exportPostAll(Request $request) 
     { 
         // validasi
         $this->validate($request, [
@@ -277,6 +285,26 @@ class BooksController extends Controller
         $handler = 'export' . ucfirst($request->get('type'));
         return $this->$handler($books);
     }
+
+    public function exportPost(Request $request) 
+    { 
+        // validasi
+        $this->validate($request, [
+            'type'=>'required|in:pdf,xls',
+            'start_date'=>'required',
+            'end_date'=>'required'
+        ]);
+
+        if($request->start_date == $request->end_date){
+            $books = Book::whereDate('created_at', $request->start_date)->get();
+        } else {
+            $books = Book::whereBetween('created_at', [$request->start_date, $request->end_date])->get();
+        }
+
+        $handler = 'export' . ucfirst($request->get('type'));
+        return $this->$handler($books);
+    }
+
 
     private function exportXls($books)
     {

@@ -47,11 +47,11 @@
                 </tr>
                 <tr>
                   <td class="text-muted">Keterlambatan</td>
-                  <td>{{ ($borrow->keterlambatan == 0) ? "Tidak ada Keterlambatan" : $keterlambatan }}</td>
+                  <td>{{ ($keterlambatan == 0) ? "Tidak ada Keterlambatan" : $keterlambatan . ' Hari' }} </td>
                 </tr>
                 <tr>
                   <td class="text-muted">Denda</td>
-                  <td>{{ ($borrow->denda == 0) ? "Tidak ada denda" : $denda }}</td>
+                  <td>{{ ($denda == 0) ? "Tidak ada denda" : $denda }}</td>
                 </tr>
               </tbody>
             </table>

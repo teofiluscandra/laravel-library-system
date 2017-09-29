@@ -14,7 +14,7 @@
           </div>
 
           <div class="panel-body">
-            {!! Form::model(auth()->user(), ['url' => url('/settings/profile'),
+            {!! Form::model(auth()->user(), ['url' => url('/settings/profile'), 'files' => true,
             'method' => 'post', 'class'=>'form-horizontal']) !!}
 
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -75,6 +75,7 @@
               </div>
             </div>
 
+            
             <div class="form-group">
               <div class="col-md-6 col-md-offset-4">
                 {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}

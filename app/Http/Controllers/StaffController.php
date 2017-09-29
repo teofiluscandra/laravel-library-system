@@ -42,7 +42,7 @@ class StaffController extends Controller
                         'model'           => $staff,
                         'form_url'        => route('staff.destroy', $staff->id),
                         'edit_url' => route('staff.edit', $staff->id),
-                        'confirm_message' => 'Yakin mau menghapus ' . $staff->name . '?'
+                        'confirm_message' => 'Yakin akan menghapus ' . $staff->name . '?'
                     ]);
                 })->make(true);
         }
@@ -231,7 +231,7 @@ class StaffController extends Controller
         return view('staff.export');
     }
 
-    public function exportPost(Request $request) 
+    public function exportPostAll(Request $request) 
     { 
         // validasi
         $this->validate($request, [
@@ -239,6 +239,25 @@ class StaffController extends Controller
         ]);
 
         $staff = Role::where('name', 'staff')->first()->users;
+
+        $handler = 'export' . ucfirst($request->get('type'));
+        return $this->$handler($staff);
+    }
+
+    public function exportPost(Request $request) 
+    { 
+        // validasi
+        $this->validate($request, [
+            'type'=>'required|in:pdf,xls',
+            'start_date'=>'required',
+            'end_date'=>'required'
+        ]);
+
+        if($request->start_date == $request->end_date){
+            $staff = User::where('role', 'staff')->whereDate('created_at', $request->start_date)->get();
+        } else {
+            $staff = User::where('role', 'staff')->whereBetween('created_at', [$request->start_date, $request->end_date])->get();
+        }
         
         $handler = 'export' . ucfirst($request->get('type'));
         return $this->$handler($staff);

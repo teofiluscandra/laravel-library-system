@@ -7,32 +7,23 @@ use Illuminate\Support\Facades\Session;
 
 class Book extends Model
 {
-    protected $fillable = ['kode_buku','title', 'author_id', 'amount','tahun_terbit','penerbit','deskripsi'];
+    protected $fillable = ['kode_buku','title', 'author_id', 'amount','tahun_terbit','penerbit','deskripsi','no_rak','category_id'];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::deleting(function($book)
-        {
-            if ($book->borrowLogs()->count() > 0) {
-                Session::flash("flash_notification", [
-                    "level"=>"danger",
-                    "message"=>"Buku $book->title sudah pernah dipinjam."
-                ]);
-                return false;
-            }
-        });
-    }
+   
 
     public function author()
     {
         return $this->belongsTo('App\Author');
     }
 
-    public function borrowLogs()
+    public function category()
     {
-        return $this->hasMany('App\BorrowLog');
+        return $this->belongsTo('App\Category');
+    }
+
+    public function borrowDetails()
+    {
+        return $this->hasMany('App\BorrowDetail');
     }
 
     public function getBorrowedAttribute()

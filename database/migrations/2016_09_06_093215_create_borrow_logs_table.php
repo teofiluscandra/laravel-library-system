@@ -29,8 +29,8 @@ class CreateBorrowLogsTable extends Migration
             $table->boolean('is_returned')->default(false);
             $table->date('tanggal_pinjam');
             $table->date('tanggal_kembali')->nullable();
-            $table->date('keterlambatan')->nullable();
-            $table->date('denda')->nullable();
+            $table->string('keterlambatan')->nullable();
+            $table->integer('denda')->nullable();
             $table->timestamps();
         });
     }

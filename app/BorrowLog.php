@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DateTime;
+use App\LibrarySetting;
 
 class BorrowLog extends Model
 {
@@ -46,11 +47,13 @@ class BorrowLog extends Model
     }
 
     public function getDenda(){
-        return 300;
+        $setting = LibrarySetting::first();
+        return $setting->biaya_denda;
     }
 
     public function getMaximumDays(){
-        return 14;
+        $setting = LibrarySetting::first();
+        return $setting->maksimal_hari;
     }
 
     public function details(){

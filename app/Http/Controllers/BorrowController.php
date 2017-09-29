@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\BorrowLog;
 use App\Book;
 use App\Borrow_detail;
+use App\LibrarySetting;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -34,9 +35,9 @@ class BorrowController extends Controller
     {
         $lastID = (BorrowLog::max('id')) + 1;
         if($lastID){
-            $id = 'KODE-'. $lastID; 
+            $id = 'P-'. $lastID; 
         } else {
-            $id = 'KODE-0'; 
+            $id = 'P-0'; 
         }
         
         return view('pinjam.create', compact('id'));
@@ -56,6 +57,18 @@ class BorrowController extends Controller
         ]);
 
         DB::beginTransaction();
+
+        $returned = BorrowLog::where('user_id', $request->user_id)->where('is_returned',0)->first();
+
+        if(isset($returned)) {
+            Session::flash("flash_notification", [
+            "level"   => "warning",
+            "message" => "Member sedang meminjam buku"
+            ]);
+
+        return redirect()->route('statistics.index');
+        }
+
         $borrow_data = $request->only('nomor_peminjaman','user_id');
         $borrow_data['staff_id'] = auth()->user()->id;
         $borrow_data['is_returned'] = 0;
@@ -66,6 +79,7 @@ class BorrowController extends Controller
         foreach($request->books as $book){
             if($book){
                 $books = Book::find($book);
+                
                 if($books->stock <= 0){
                     Session::flash("flash_notification", [
                         "level"   => "danger",
@@ -73,7 +87,7 @@ class BorrowController extends Controller
                     ]);
                     return back();
                 }
-                $books->stock = $books->stock - 1;
+                $books->stock = ($books->stock) - 1;
                 $books->update();
                 $borrow_detail = new Borrow_detail();
                 $borrow_detail->borrow_id = $borrow->id;
@@ -111,7 +125,15 @@ class BorrowController extends Controller
     {
         $borrow = BorrowLog::findOrFail($id);
         $no = 1;
-        return view('pinjam.show', compact('borrow','no'));
+        $hari = $borrow->getDays($borrow->tanggal_pinjam);
+        if($hari > $borrow->getMaximumDays()){
+            $keterlambatan = $hari - $borrow->getMaximumDays();
+            $denda = $keterlambatan * $borrow->getDenda();
+        } else {
+            $denda = 0;
+            $keterlambatan = 0;
+        }
+        return view('pinjam.show', compact('borrow','no','denda','keterlambatan'));
     }
 
     /**
@@ -154,7 +176,7 @@ class BorrowController extends Controller
         $hari = $return->getDays($return->tanggal_pinjam);
         if($hari > $return->getMaximumDays()){
             $keterlambatan = $hari - $return->getMaximumDays();
-            $denda = $keterlambatan * $return->getDenda();
+            $denda = $keterlambatan * $return->getDenda() * $return->details->count();
         } else {
             $denda = 0;
             $keterlambatan = 0;
@@ -169,7 +191,7 @@ class BorrowController extends Controller
         $hari = $return->getDays($return->tanggal_pinjam);
         if($hari > $return->getMaximumDays()){
             $data['keterlambatan'] = $hari - $return->getMaximumDays();
-            $data['denda'] = $keterlambatan * $return->getDenda();
+            $data['denda'] = $data['keterlambatan'] * $return->getDenda() * $return->details->count();
         } else {
             $data['keterlambatan'] = 0;
             $data['denda'] = 0;
@@ -177,7 +199,22 @@ class BorrowController extends Controller
 
         $data['is_returned'] = 1;
         $borrow = $return->update($data);
-        return redirect()->route('statistics.index');
+
+        foreach($return->details as $book){
+            if($book){
+                $books = Book::find($book->book_id);
+                $books->stock = ($books->stock) + 1;
+                $books->update();
+            }
+        }
+
+        if($hari > $return->getMaximumDays()){
+            $setting = LibrarySetting::first();
+            $pdf = PDF::loadview('pdf.slip', compact('return','setting'));
+            return $pdf->stream();
+        } else {
+            return redirect()->route('statistics.index');
+        }
     }
 
         public function export() 
@@ -253,7 +290,7 @@ class BorrowController extends Controller
     private function exportPdf($borrows)
     {
         $pdf = PDF::loadview('pdf.borrows', compact('borrows'));
-        return $pdf->download('borrows.pdf');
+        return $pdf->download('data-peminjaman.pdf');
     }
 
 }

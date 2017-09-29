@@ -25,13 +25,13 @@ class StoreBookRequest extends FormRequest
     public function rules()
     {
         return [
-            'kode_buku' => 'required|unique:books,kode_buku',
+            'category_id' => 'required',
             'title'     => 'required|unique:books,title',
             'author_id' => 'required|exists:authors,id',
             'tahun_terbit'    => 'required|numeric',
             'amount'    => 'required|numeric',
             'penerbit' => 'required',
-            'cover'     => 'image|max:2048'
+            'no_rak' => 'required'
         ];
     }
 }

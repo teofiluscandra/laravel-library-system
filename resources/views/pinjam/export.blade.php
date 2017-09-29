@@ -6,7 +6,9 @@
     <div class="col-md-12">
       <ul class="breadcrumb">
         <li><a href="{{ url('/home') }}">Dashboard</a></li>
+        @role('staff')
         <li><a href="{{ url('/data/statistics') }}">Peminjaman</a></li>
+        @endrole
         <li class="active">Export Data Peminjaman</li>
       </ul>
       <div class="panel panel-default">
@@ -78,6 +80,8 @@
           {!! Form::close() !!}
         </div>
       </div>
+
+      
     </div>
   </div>
 </div>

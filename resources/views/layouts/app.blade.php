@@ -51,12 +51,52 @@
                     @if (Auth::check())
                         {!! Html::smartNav(url('/home'), 'Dashboard') !!}
                     @endif
+                    @role('kepala')
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Laporan
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="{{ route('export.borrow') }}">Peminjaman</a></li>
+                            <li><a href=" {{route('export.members')}}">Member</a></li>
+                            <li><a href=" {{route('export.staff')}}">Staff</a></li>
+                            <li><a href=" {{route('export.books')}}">Buku</a></li>
+                            </ul>
+                        </li>
+                    @endrole
                     @role('admin')
-                        {!! Html::smartNav(route('authors.index'), 'Penulis') !!}
-                        {!! Html::smartNav(route('books.index'), 'Buku') !!}
-                        {!! Html::smartNav(route('members.index'), 'Member') !!}
-                        {!! Html::smartNav(route('staff.index'), 'Staff') !!}
+                       
+                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">User
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="{{ route('staff.index') }}">Staff</a></li>
+                            <li><a href=" {{route('members.index')}}">Member</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Buku
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="{{ route('authors.index') }}">Penulis</a></li>
+                            <li><a href="{{ route('categories.index') }}">Kategori</a></li>
+                            <li><a href=" {{route('books.index')}}">Daftar Buku</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Laporan
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="{{ route('export.borrow') }}">Peminjaman</a></li>
+                            <li><a href=" {{route('export.members')}}">Member</a></li>
+                            <li><a href=" {{route('export.staff')}}">Staff</a></li>
+                            <li><a href=" {{route('export.books')}}">Buku</a></li>
+                            </ul>
+                        </li>
+                        
                         {!! Html::smartNav(route('statistics.index'), 'Peminjaman') !!}
+                        
+                        {!! Html::smartNav(url('data/settings/library'), 'Setting') !!}
                     @endrole
                     @role('member')
                         {!! Html::smartNav(route('booklist.index'), 'Daftar Buku') !!}
@@ -64,10 +104,18 @@
                     @endrole
                     @role('staff')
                        {!! Html::smartNav(route('authors.index'), 'Penulis') !!}
-                        {!! Html::smartNav(route('books.index'), 'Buku') !!}
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Buku
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a href="{{ route('categories.index') }}">Kategori</a></li>
+                            <li><a href=" {{route('books.index')}}">Daftar Buku</a></li>
+                            </ul>
+                        </li>
                         {!! Html::smartNav(route('members.index'), 'Member') !!}
                         {!! Html::smartNav(route('statistics.index'), 'Peminjaman') !!}
                         {!! Html::smartNav(url('/settings/profile'), 'Profil') !!}
+                        {!! Html::smartNav(url('data/settings/library'), 'Setting') !!}
                     @endrole
                 </ul>
 
@@ -77,6 +125,7 @@
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Daftar</a></li>
+                         <li><a href="{{ url('/books-list') }}">Daftar Buku</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

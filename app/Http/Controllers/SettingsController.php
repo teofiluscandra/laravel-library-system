@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Member;
 use App\Staff;
+use Illuminate\Support\Facades\File;
+
 
 class SettingsController extends Controller
 {
@@ -46,10 +48,33 @@ class SettingsController extends Controller
         ]);
 
         $member = Member::where('user_id', auth()->user()->id)->first();
-        $member->update($request->except('name','email'));
+        $member->update($request->except('name','email','foto'));
         $user->name  = $request->get('name');
         $user->email = $request->get('email');
         $user->save();
+
+        if ($request->hasFile('foto')) {
+            $filename = null;
+            $uploaded_foto = $request->file('foto');
+            $extension = $uploaded_foto->getClientOriginalExtension();
+            $filename = md5(time()) . '.' . $extension;
+            $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'img';
+            $uploaded_foto->move($destinationPath, $filename);
+            if ($member->foto) {
+                $old_foto = $member->foto;
+                $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
+                    . DIRECTORY_SEPARATOR . $member->foto;
+
+                try {
+                    File::delete($filepath);
+                } catch (FileNotFoundException $e) {
+                }
+            }
+            $member->foto = $filename;
+            $member->save();
+        }
+
+        
 
         Session::flash("flash_notification", [
             "level"=>"success",

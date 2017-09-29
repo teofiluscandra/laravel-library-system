@@ -20,14 +20,7 @@ class BookListController extends Controller
                 ->addColumn('stock', function($book){
                     return $book->stock;
                 })
-                ->addColumn('cover', function($book){
-                    if($book->cover){
-                        return '<img src="/img/'.$book->cover.'" height="200" width="180"> ';
-                    } else {
-                        return 'No Cover';
-                    }
-                    
-                })
+               
                 ->addColumn('action', function($book){
                     if (Laratrust::hasRole('admin')) return '';
                     return '<a class="btn btn-xs btn-primary" href="'.route('booklist.show', $book->id).'">Details</a>';
@@ -36,9 +29,9 @@ class BookListController extends Controller
 
         $html = $htmlBuilder
             ->addColumn(['data' => 'kode_buku', 'name'=>'kode_buku', 'title'=>'Kode Buku'])
-            ->addColumn(['data' => 'cover', 'name'=>'cover', 'title'=>'Cover', 'orderable'=>false, 'searchable'=>false])
             ->addColumn(['data' => 'title', 'name'=>'title', 'title'=>'Judul'])
             ->addColumn(['data' => 'stock', 'name'=>'stock', 'title'=>'Stok', 'orderable'=>false, 'searchable'=>false])
+            ->addColumn(['data' => 'no_rak', 'name'=>'no_rak', 'title'=>'Nomor Rak'])
             ->addColumn(['data' => 'author.name', 'name'=>'author.name', 'title'=>'Penulis'])
             ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
 

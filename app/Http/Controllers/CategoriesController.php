@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Author;
+use App\Category;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Session;
 
-class AuthorsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,23 +20,24 @@ class AuthorsController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-            $authors = Author::select(['id', 'name']);
-            return Datatables::of($authors)
-                ->addColumn('action', function($author){
+            $categories = Category::all();
+            return Datatables::of($categories)
+                ->addColumn('action', function($category){
                     return view('datatable._action', [
-                        'model'           => $author,
-                        'form_url'        => route('authors.destroy', $author->id),
-                        'edit_url' => route('authors.edit', $author->id),
-                        'confirm_message' => 'Yakin akan menghapus ' . $author->name . '?'
+                        'model'           => $category,
+                        'form_url'        => route('categories.destroy', $category->id),
+                        'edit_url'        => route('categories.edit', $category->id),
+                        'confirm_message' => 'Yakin akan menghapus ' . $category->nama . '?'
                     ]);
                 })->make(true);
         }
 
         $html = $htmlBuilder
-            ->addColumn(['data' => 'name', 'name'=>'name', 'title'=>'Nama'])
+            ->addColumn(['data' => 'nama', 'name'=>'nama', 'title'=>'Nama'])
+            ->addColumn(['data' => 'initial', 'name'=>'initial', 'title'=>'Initial'])
             ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>false, 'searchable'=>false]);
 
-        return view('authors.index')->with(compact('html'));
+        return view('categories.index')->with(compact('html'));
     }
 
     /**
@@ -46,7 +47,7 @@ class AuthorsController extends Controller
      */
     public function create()
     {
-        return view('authors.create');
+        return view('categories.create');
     }
 
     /**
@@ -57,13 +58,13 @@ class AuthorsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['name' => 'required|unique:authors']);
-        $author = Author::create($request->all());
+        $this->validate($request, ['nama' => 'required|unique:categories', 'initial' => 'required|unique:categories']);
+        $category = Category::create($request->all());
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil menyimpan $author->name"
+            "message"=>"Berhasil menyimpan $category->nama"
         ]);
-        return redirect()->route('authors.index');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -85,8 +86,8 @@ class AuthorsController extends Controller
      */
     public function edit($id)
     {
-        $author = Author::find($id);
-        return view('authors.edit')->with(compact('author'));
+        $category = Category::find($id);
+        return view('categories.edit')->with(compact('category'));
     }
 
     /**
@@ -98,15 +99,15 @@ class AuthorsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, ['name' => 'required|unique:authors,name,'. $id]);
-        $author = Author::find($id);
-        $author->update($request->only('name'));
+        $this->validate($request, ['nama' => 'required|unique:categories,nama,'. $id, 'initial' => 'required|unique:categories,initial,'. $id]);
+        $category = Category::find($id);
+        $category->update($request->only('nama','initial'));
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil menyimpan $author->name"
+            "message"=>"Berhasil menyimpan $category->nama"
         ]);
 
-        return redirect()->route('authors.index');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -117,13 +118,13 @@ class AuthorsController extends Controller
      */
     public function destroy($id)
     {
-        if(!Author::destroy($id)) return redirect()->back();
+        if(!Category::destroy($id)) return redirect()->back();
 
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Penulis berhasil dihapus"
+            "message"=>"Kategori berhasil dihapus"
         ]);
 
-        return redirect()->route('authors.index');
+        return redirect()->route('categories.index');
     }
 }

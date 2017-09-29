@@ -12,7 +12,7 @@
           <div class="panel-body">
               Selamat datang di Menu Administrasi Dinas Kearsipan dan Perpustakaan Provinsi Bali. Silahkan pilih menu administrasi yang diinginkan.
               <hr>
-              <h4>Statistik Penulis</h4>
+              <h4>Statistik Peminjaman Tahun 2017</h4>
               <canvas id="chartPenulis" width="400" height="150"></canvas>
           </div>
         </div>
@@ -22,7 +22,7 @@
 @endsection
 
 @section('scripts')
-    <script src="/js/Chart.min.js"></script>
+    <script src="{{url('/js/Chart.min.js')}}"></script>
     <script>
     var data = {
         labels: {!! json_encode($members) !!},

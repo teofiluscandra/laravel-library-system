@@ -39,11 +39,11 @@ class MembersController extends Controller
                     return '<a href="'.route('members.show', $member->id).'">'.$member->name.'</a>';
                 })
                 ->addColumn('action', function($member){
-                    return view('datatable._action', [
+                    return view('datatable._action_member', [
                         'model'           => $member,
                         'form_url'        => route('members.destroy', $member->id),
                         'edit_url' => route('members.edit', $member->id),
-                        'confirm_message' => 'Yakin mau menghapus ' . $member->name . '?'
+                        'confirm_message' => 'Yakin akan menghapus ' . $member->name . '?'
                     ]);
                 })->make(true);
         }
@@ -151,7 +151,7 @@ class MembersController extends Controller
      */
     public function update(UpdateMemberRequest $request, $id)
     {
-        $this->validate($request, ['email' => 'required|unique:members,email,'. $id]);
+        $this->validate($request, ['email' => 'required|unique:users,email,'. $id]);
         $member = User::find($id);
         $member->update($request->only('name','email'));
 
@@ -193,7 +193,7 @@ class MembersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request$request,$id)
     {
         $member = User::find($id);
         
@@ -231,7 +231,7 @@ class MembersController extends Controller
         return view('members.export');
     }
 
-    public function exportPost(Request $request) 
+    public function exportPostAll(Request $request) 
     { 
         // validasi
         $this->validate($request, [
@@ -240,6 +240,24 @@ class MembersController extends Controller
 
         $members = Role::where('name', 'member')->first()->users;
 
+        $handler = 'export' . ucfirst($request->get('type'));
+        return $this->$handler($members);
+    }
+
+    public function exportPost(Request $request) 
+    { 
+        // validasi
+        $this->validate($request, [
+            'type'=>'required|in:pdf,xls',
+            'start_date'=>'required',
+            'end_date'=>'required'
+        ]);
+        if($request->start_date == $request->end_date){
+            $members = User::where('role', 'member')->whereDate('created_at', $request->start_date)->get();
+        } else {
+            $members = User::where('role', 'member')->whereBetween('created_at', [$request->start_date, $request->end_date])->get();
+        }
+        
         $handler = 'export' . ucfirst($request->get('type'));
         return $this->$handler($members);
     }

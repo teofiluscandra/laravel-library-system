@@ -26,11 +26,19 @@ Route::post('settings/profile', 'SettingsController@updateProfile');
 Route::get('settings/password', 'SettingsController@editPassword');
 Route::post('settings/password', 'SettingsController@updatePassword');
 
-Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin|staff']], function () {
+Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin']], function () {
   Route::resource('authors', 'AuthorsController');
   Route::resource('books', 'BooksController');
+  Route::resource('borrow', 'BorrowController');
+  Route::get('settings/library', 'LibrarySettingsController@edit');
+  Route::post('settings/library', 'LibrarySettingsController@update');
+  Route::get('statistics', ['as'=>'statistics.index','uses'=>'StatisticsController@index']);
+  Route::get('borrow/{id}/return', ['as'=>'borrow.return','uses'=>'BorrowController@return']);
+  Route::put('borrow/{id}/return/post',['as'=>'borrow.return.post','uses'=>'BorrowController@return_post']);
   Route::resource('members', 'MembersController');
   Route::resource('borrow', 'BorrowController');
+
+  Route::resource('categories', 'CategoriesController');
   Route::get('statistics', [
     'as'   => 'statistics.index',
     'uses' => 'StatisticsController@index'
@@ -49,6 +57,10 @@ Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin|staff']], fun
   ]);
   Route::post('export/books', [
     'as'   => 'export.books.post',
+    'uses' => 'BooksController@exportPostAll'
+  ]);
+  Route::post('export/books.date', [
+    'as'   => 'export.books.post.date',
     'uses' => 'BooksController@exportPost'
   ]);
   Route::get('export/members', [
@@ -57,6 +69,10 @@ Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin|staff']], fun
   ]);
   Route::post('export/members', [
     'as'   => 'export.members.post',
+    'uses' => 'MembersController@exportPostAll'
+  ]);
+  Route::post('export/members/date', [
+    'as'   => 'export.members.post.date',
     'uses' => 'MembersController@exportPost'
   ]);
   Route::get('export/staff', [
@@ -65,6 +81,10 @@ Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin|staff']], fun
   ]);
   Route::post('export/staff', [
     'as'   => 'export.staff.post',
+    'uses' => 'StaffController@exportPostAll'
+  ]);
+  Route::post('export/staff/date', [
+    'as'   => 'export.staff.post.date',
     'uses' => 'StaffController@exportPost'
   ]);
     Route::get('export/borrow', [
@@ -87,16 +107,130 @@ Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin|staff']], fun
     'as'   => 'import.books',
     'uses' => 'BooksController@importExcel'
   ]);
+  Route::get('settings/library', 'LibrarySettingsController@edit');
+  Route::post('settings/library', 'LibrarySettingsController@update');
+});
+
+Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:kepala']], function () {
+  
+  Route::get('export/books', [
+    'as'   => 'export.books',
+    'uses' => 'BooksController@export'
+  ]);
+  Route::post('export/books', [
+    'as'   => 'export.books.post',
+    'uses' => 'BooksController@exportPostAll'
+  ]);
+  Route::post('export/books.date', [
+    'as'   => 'export.books.post.date',
+    'uses' => 'BooksController@exportPost'
+  ]);
+  Route::get('export/members', [
+    'as'   => 'export.members',
+    'uses' => 'MembersController@export'
+  ]);
+  Route::post('export/members', [
+    'as'   => 'export.members.post',
+    'uses' => 'MembersController@exportPostAll'
+  ]);
+  Route::post('export/members/date', [
+    'as'   => 'export.members.post.date',
+    'uses' => 'MembersController@exportPost'
+  ]);
+  Route::get('export/staff', [
+    'as'   => 'export.staff',
+    'uses' => 'StaffController@export'
+  ]);
+  Route::post('export/staff', [
+    'as'   => 'export.staff.post',
+    'uses' => 'StaffController@exportPostAll'
+  ]);
+  Route::post('export/staff/date', [
+    'as'   => 'export.staff.post.date',
+    'uses' => 'StaffController@exportPost'
+  ]);
+    Route::get('export/borrow', [
+    'as'   => 'export.borrow',
+    'uses' => 'BorrowController@export'
+  ]);
+  Route::post('export/borrow', [
+    'as'   => 'export.borrow.post',
+    'uses' => 'BorrowController@exportPostAll'
+  ]);
+  Route::post('export/borrow/date', [
+    'as'   => 'export.borrow.post.date',
+    'uses' => 'BorrowController@exportPost'
+  ]);
+});
+
+Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:staff|admin|kepala']], function () {
+  Route::resource('authors', 'AuthorsController');
+  Route::resource('books', 'BooksController');
+  Route::resource('borrow', 'BorrowController');
+  Route::get('settings/library', 'LibrarySettingsController@edit');
+  Route::post('settings/library', 'LibrarySettingsController@update');
+  Route::get('statistics', ['as'=>'statistics.index','uses'=>'StatisticsController@index']);
+  Route::get('borrow/{id}/return', ['as'=>'borrow.return','uses'=>'BorrowController@return']);
+  Route::put('borrow/{id}/return/post',['as'=>'borrow.return.post','uses'=>'BorrowController@return_post']);
+  Route::resource('members', 'MembersController', ['except' => [
+    'create', 'store', 'destroy'
+]]);
+  Route::resource('borrow', 'BorrowController');
+  Route::resource('categories', 'CategoriesController');
+  Route::get('export/books', [
+    'as'   => 'export.books',
+    'uses' => 'BooksController@export'
+  ]);
+  Route::post('export/books', [
+    'as'   => 'export.books.post',
+    'uses' => 'BooksController@exportPostAll'
+  ]);
+  Route::post('export/books.date', [
+    'as'   => 'export.books.post.date',
+    'uses' => 'BooksController@exportPost'
+  ]);
+  Route::get('export/members', [
+    'as'   => 'export.members',
+    'uses' => 'MembersController@export'
+  ]);
+  Route::post('export/members', [
+    'as'   => 'export.members.post',
+    'uses' => 'MembersController@exportPostAll'
+  ]);
+  Route::post('export/members/date', [
+    'as'   => 'export.members.post.date',
+    'uses' => 'MembersController@exportPost'
+  ]);
+  Route::get('export/staff', [
+    'as'   => 'export.staff',
+    'uses' => 'StaffController@export'
+  ]);
+  Route::post('export/staff', [
+    'as'   => 'export.staff.post',
+    'uses' => 'StaffController@exportPostAll'
+  ]);
+  Route::post('export/staff/date', [
+    'as'   => 'export.staff.post.date',
+    'uses' => 'StaffController@exportPost'
+  ]);
+    Route::get('export/borrow', [
+    'as'   => 'export.borrow',
+    'uses' => 'BorrowController@export'
+  ]);
+  Route::post('export/borrow', [
+    'as'   => 'export.borrow.post',
+    'uses' => 'BorrowController@exportPostAll'
+  ]);
+  Route::post('export/borrow/date', [
+    'as'   => 'export.borrow.post.date',
+    'uses' => 'BorrowController@exportPost'
+  ]);
 });
 
 Route::group(['prefix'=>'data', 'middleware'=>['auth', 'role:admin']], function () {
     Route::resource('staff', 'StaffController');
 });
-// Route::get('books/{book}/borrow', [
-//   'middleware' => ['auth', 'role:member'],
-//   'as'         => 'guest.books.borrow',
-//   'uses'       => 'BooksController@borrow'
-// ]);
+
 
 Route::put('books/{book}/return', [
   'middleware' => ['auth', 'role:member'],

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use DB;
@@ -58,6 +59,10 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'no_identitas' => 'required|unique:members',
+            'alamat' => 'required',
             'g-recaptcha-response' => 'required|captcha',
         ]);
     }
@@ -72,6 +77,7 @@ class RegisterController extends Controller
     {
         DB::beginTransaction();
         try {
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -82,7 +88,7 @@ class RegisterController extends Controller
 
         $member = Member::create([
             'user_id' => $user->id,
-            'kode_member'=>'KD-P-'. $user->id,
+            'kode_member'=>'KD-'. $user->id,
             'tempat_lahir' => $data['tempat_lahir'],
             'tanggal_lahir' => $data['tanggal_lahir'],
             'no_identitas' => $data['no_identitas'],

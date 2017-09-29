@@ -11,29 +11,37 @@
 
           <div class="panel-body">
             Selamat datang di Sistem Informasi Perpustakaan Provinsi Bali.
+            <h4>Data Peminjaman</h4>
             <table class="table">
                 <tbody>
                     <tr>
-                        <td class="text-muted">Buku dipinjam</td>
+                        
                         <td>
                             @if ($borrowLogs->count() == 0)
                                 Tidak ada buku dipinjam
                             @endif
-                            <ul>
-                                @foreach ($borrowLogs as $borrowLog)
-                                    <li>
-                                        {!! Form::open(['url' => route('member.books.return', $borrowLog->book_id),
-                                                'method'       => 'put',
-                                                'class'        => 'form-inline js-confirm',
-                                                'data-confirm' => "Anda yakin hendak mengembalikan " . $borrowLog->book->title . "?"] ) !!}
 
-                                            {{ $borrowLog->book->title }}
-                                            {!! Form::submit('Kembalikan', ['class'=>'btn btn-xs btn-default']) !!}
+                            <table class="table table-condensed">
+                              <thead>
+                                  <tr>
+                                    <th>Nomor Peminjaman</th>
+                                    <th>Tanggal Peminjaman</th>
+                                    <th>Jumlah Hari</th>
+                                    <th>Jumlah Buku</th>
+                                  </tr>
+                              </thead>
 
-                                        {!! Form::close() !!}
-                                    </li>
-                                @endforeach
-                            </ul>
+
+                            @foreach ($borrowLogs as $borrowLog)
+                               <tr>
+                                 <td>{{ $borrowLog->nomor_peminjaman }}</td>
+                                 <td>{{ $borrowLog->tanggal_pinjam }}</td>
+                                 <td>{{ $borrowLog->getDays($borrowLog->tanggal_pinjam) }} Hari</td>
+                                 <td>{{ $borrowLog->details->count() }}</td>
+                               </tr> 
+                            @endforeach
+
+                            </table>
                         </td>
                     </tr>
                 </tbody>

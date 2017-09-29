@@ -30,6 +30,19 @@
     </div>
 </div> --}}
 
+<div class="form-group{{ $errors->has('foto') ? ' has-error' : '' }}">
+  {!! Form::label('foto', 'Foto', ['class'=>'col-md-2 control-label']) !!}
+  <div class="col-md-4">
+    {!! Form::file('foto') !!}
+    @if (isset($member) && $member->members->foto)
+      <p>
+      {!! Html::image(asset('img/'.$member->members->foto), null, ['class'=>'img-rounded img-responsive']) !!}
+      </p>
+    @endif
+    {!! $errors->first('foto', '<p class="help-block">:message</p>') !!}
+  </div>
+</div>
+
 <div class="form-group{{ $errors->has('tempat_lahir') ? ' has-error' : '' }}">
     {!! Form::label('tempat_lahir', 'Tempat Lahir', ['class'=>'col-md-2 control-label']) !!}
     <div class="col-md-4">

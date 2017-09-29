@@ -22,12 +22,12 @@ class BooksSeeder extends Seeder
 
         // Sample buku
         $book1 = Book::create(['title'=>'Kupinang Engkau dengan Hamdalah',
-            'amount'=>3, 'stock'=>3, 'kode_buku'=>'1', 'author_id'=>$author1->id]);
+            'amount'=>3, 'stock'=>3, 'kode_buku'=>'1', 'author_id'=>$author1->id, 'category_id'=>'1']);
         $book2 = Book::create(['title'=>'Jalan Cinta Para Pejuang',
-            'amount'=>2, 'stock'=>3,'kode_buku'=>'2','author_id'=>$author2->id]);
+            'amount'=>2, 'stock'=>3,'kode_buku'=>'2','author_id'=>$author2->id, 'category_id'=>'1']);
         $book3 = Book::create(['title'=>'Membingkai Surga dalam Rumah Tangga',
-            'amount'=>4, 'stock'=>3,'kode_buku'=>'3', 'author_id'=>$author3->id]);
+            'amount'=>4, 'stock'=>3,'kode_buku'=>'3', 'author_id'=>$author3->id, 'category_id'=>'1']);
         $book4 = Book::create(['title'=>'Cinta & Seks Rumah Tangga Muslim',
-            'amount'=>3, 'stock'=>3,'kode_buku'=>'4', 'author_id'=>$author3->id]);
+            'amount'=>3, 'stock'=>3,'kode_buku'=>'4', 'author_id'=>$author3->id, 'category_id'=>'1']);
     }
 }
