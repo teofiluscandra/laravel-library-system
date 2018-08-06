@@ -10,7 +10,7 @@
           </div>
 
           <div class="panel-body">
-            Selamat datang di Sistem Informasi Perpustakaan Provinsi Bali.
+            Selamat datang di Sistem Informasi Perpustakaan.
             <h4>Data Peminjaman</h4>
             <table class="table">
                 <tbody>

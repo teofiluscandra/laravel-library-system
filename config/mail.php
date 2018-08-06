@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => 'admin@perpustakaan.dev',
-        'name' => 'Admin Balai Perpustakaan Bali',
+        'name' => 'Admin',
     ],
 
     /*

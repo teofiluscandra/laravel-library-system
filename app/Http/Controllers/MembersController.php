@@ -105,7 +105,7 @@ class MembersController extends Controller
 
         // kirim email
         Mail::send('auth.emails.invite', with(['data'=>$member, 'password'=>$password]), function ($m) use ($member) {
-            $m->to($member->email, $member->name)->subject('Anda telah didaftarkan di Dinas Kearsipan dan Perpustakaan Provinsi Bali!');
+            $m->to($member->email, $member->name)->subject('Anda telah didaftarkan!');
         });
 
         Session::flash("flash_notification", [

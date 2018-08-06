@@ -13,7 +13,7 @@
   font-weight:100;
   background-position-x:left, center;
   background-position-y:top, center;
-  background-color:rgb(168, 75, 75);
+  background-color:#FA4E3A;
   background-repeat-x:no-repeat, no-repeat;
   background-repeat-y:repeat, no-repeat;
 }
@@ -228,8 +228,8 @@ span.s1{
 }
 
 .navbar-default {
-  background-color: #A84B4B !important;
-  border-color : #A84B4B !important;
+  background-color: #F05340 !important;
+  border-color : #F05340 !important;
 }
 
 .navbar {
@@ -245,9 +245,9 @@ span.s1{
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{
-   color: #A84B4B !important;
+   color: #F05340 !important;
 }
 
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
-  color: #A84B4B !important;
+  color: #F05340 !important;
 }

@@ -350,9 +350,9 @@ class BooksController extends Controller
         Excel::create('Template Import Buku', function($excel) {
             // Set the properties
             $excel->setTitle('Template Import Buku')
-                ->setCreator('Dinas Kearsipan dan Perpustakaan Provinsi Bali')
-                ->setCompany('Dinas Kearsipan dan Perpustakaan Provinsi Bali')
-                ->setDescription('Template import buku untuk Dinas Kearsipan dan Perpustakaan Provinsi Bali');
+                ->setCreator('Perpustakaan')
+                ->setCompany('Perpustakaan')
+                ->setDescription('Template import buku');
 
             $excel->sheet('Data Buku', function($sheet) {
                 $row = 1;

@@ -58,7 +58,9 @@ class AuthorsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, ['name' => 'required|unique:authors']);
+
         $author = Author::create($request->all());
+        
         Session::flash("flash_notification", [
             "level"=>"success",
             "message"=>"Berhasil menyimpan $author->name"

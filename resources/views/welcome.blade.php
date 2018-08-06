@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Halo</div>
                 <div class="panel-body">
-                    Selamat datang di Dinas Kearsipan dan Perpustakaan Provinsi Bali
+                    Selamat datang di Sistem Perpustakaan Bali
                 </div>
             </div>
         </div>

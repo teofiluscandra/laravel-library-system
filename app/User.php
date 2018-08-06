@@ -84,7 +84,7 @@ class User extends Authenticatable
         $token = $this->generateVerificationToken();
         $user = $this;
         Mail::send('auth.emails.verification', compact('user', 'token'), function ($m) use ($user) {
-            $m->to($user->email, $user->name)->subject('Verifikasi Akun Dinas Kearsipan dan Perpustakaan Provinsi Bali');
+            $m->to($user->email, $user->name)->subject('Verifikasi Akun');
         });
     }
 

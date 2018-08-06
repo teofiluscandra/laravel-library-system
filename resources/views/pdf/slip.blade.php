@@ -56,7 +56,7 @@
 			<tbody>
 				<tr>
 					<td width="30%">
-						<img src="{{url('/images/logo-pemda-prov-bali.png')}}" width=150> <!-- your logo here -->
+						
 					</td>
 					<td width="70%">
 						<h2>Slip Pembayaran Denda</h2><br>

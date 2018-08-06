@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Data Buku Dinas Kearsipan dan Perpustakaan Provinsi Bali</title>
+  <title>Data Buku</title>
   <style>
 
 /* --------------------------------------------------------------
@@ -70,7 +70,7 @@ img,tr {page-break-inside: avoid;}
   </style>
 </head>
 <body>
-  <h1>Data Buku Dinas Kearsipan dan Perpustakaan Provinsi Bali</h1>
+  <h1>Data Buku</h1>
   <hr>
   <table>
     <thead>

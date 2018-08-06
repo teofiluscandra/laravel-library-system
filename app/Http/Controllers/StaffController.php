@@ -103,7 +103,7 @@ class StaffController extends Controller
 
         // kirim email
         Mail::send('auth.emails.invite', with(['data'=>$staff, 'password'=>$password]), function ($m) use ($staff) {
-            $m->to($staff->email, $staff->name)->subject('Anda telah didaftarkan di Dinas Kearsipan dan Perpustakaan Provinsi Bali!');
+            $m->to($staff->email, $staff->name)->subject('Anda telah didaftarkan!');
         });
 
         Session::flash("flash_notification", [

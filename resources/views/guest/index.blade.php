@@ -5,12 +5,12 @@
   <header class="header-banner">
   <div class="container-width">
     <div class="logo-container">
-        <img src="{{ url('/images/logo-pemda-prov-bali.png') }}" width="100">
+        
     </div>
     <div class="clearfix">
     </div>
     <center>
-    <div class="lead-title">Sistem Informasi Perpustakaan Pemerintah Provinsi Bali
+    <div class="lead-title">Sistem Informasi Perpustakaan
     </center> 
     </div>
     </div>
@@ -20,37 +20,19 @@
   <div class="container-width">
     <div class="flex-title">Selamat Datang
     </div>
-    <div class="flex-desc">Selamat datang di Sistem Informasi Dinas Kearsipan dan Perpustakaan Provinsi Bali
+    <div class="flex-desc">Selamat datang di Sistem Informasi Perpustakaan
     </div>
+    <p>This system is build with Laravel Framework, for improve my coding with PHP</p>
+    <p>Feature : </p>
+    <ol>
+      <li>User Management (Admin, Member and Library Staff)</li>
+      <li>Books data management with category</li>
+      <li>Reporting</li>
+      <li>Borrow management with maximal date and late penalty</li>
+    </ol>
   </div>
 </section>
-<section class="blk-sect">
-  <div class="container-width">
-    <div class="blk-title">About Us
-    </div>
-    <div class="blk-desc">Dinas Kearsipan dan Perpustakaan Provinsi Bali
-    </div>
-    <div class="blk-desc">Jl. D.I Panjaitan No.4 Niti Mandala Renon Denpasar
-    </div>
-    <div class="blk-desc">(0361) 223201
-    </div>
-  </div>
-</section>
-<footer class="footer-under">
-  <div class="container-width">
-  </div>
-  <div class="copyright">
-    <div class="container-width">
-      <div class="made-with">
-        Dinas Kearsipan dan Perpustakaan Provinsi Bali
-      </div>
-      <div class="foot-social-btns">facebook twitter linkedin mail
-      </div>
-      <div class="clearfix">
-      </div>
-    </div>
-  </div>
-</footer>
+
 @endsection
 
 @section('scripts')

@@ -96,7 +96,7 @@ class SettingsController extends Controller
             'password' => 'required|passcheck:' . $user->password,
             'new_password' => 'required|confirmed|min:6',
         ], [
-            'password.passcheck' => 'Password lama tidak sesuai'
+            'password.passcheck' => 'Old password is not match'
         ]);
 
         $user->password = bcrypt($request->get('new_password'));
