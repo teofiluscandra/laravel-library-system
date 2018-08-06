@@ -8,4 +8,7 @@ Build with Laravel Framework
 
 ## License
 
+Learn and inspired from a book
+[Seminggu Belajar Laravel](https://leanpub.com/seminggubelajarlaravel).
+
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
